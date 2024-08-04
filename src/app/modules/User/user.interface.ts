@@ -1,11 +1,9 @@
-
-
 export interface TUser {
   id: string;
   email: string;
   password: string;
-  phone: boolean; 
+  phone: boolean;
   passwordChangedAt?: Date;
   role: "admin" | "user";
-  isDeleted: boolean; 
+  isDeleted: boolean;
 }

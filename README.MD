@@ -13,4 +13,8 @@ This a bike rental system where users could easily rent bikes online. User would
 - express (dependencies/devDependencies)
 - mongoose
 - cookie-parser (dependencies/devDependencies)
+- Zod
+- eslint
+- prettier
+- http-status
 

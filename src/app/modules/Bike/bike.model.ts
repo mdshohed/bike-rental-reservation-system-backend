@@ -16,7 +16,8 @@ const bikeSchema = new Schema<TBike>({
   },
   isAvailable: { 
     type: Boolean, 
-    required: true 
+    required: true,
+    default: true
   },
   cc: { 
     type: Number, 
@@ -34,10 +35,30 @@ const bikeSchema = new Schema<TBike>({
     type: String, 
     required: true 
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
+  // isDeleted: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  
+},
+{
+  timestamps: true,
 });
+
+// filter out deleted documents
+bikeSchema.pre('find', function (next) {
+  this.find({ isAvailable: { $ne: false } });
+  next();
+});
+
+bikeSchema.pre('findOne', function (next) {
+  this.find({ isAvailable: { $ne: false } });
+  next();
+});
+
+// bikeSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+//   next();
+// });
 
 export const Bike = model<TBike>("Bike", bikeSchema);

@@ -19,7 +19,8 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
   //   .fields();
 
   // const result = await bikeQuery.modelQuery;
-  // return result;
+  const result = await Bike.find();
+  return result;
 };
 
 const updateBikeFromDB = async (id: string, payload: Partial<TBike>) => {
@@ -29,7 +30,7 @@ const updateBikeFromDB = async (id: string, payload: Partial<TBike>) => {
 const deleteBikeFromDB = async (id: string) => {
   const result = await Bike.findByIdAndUpdate(
     id,
-    { isDeleted: true },
+    { isAvailable: false },
     {
       new: true,
     },

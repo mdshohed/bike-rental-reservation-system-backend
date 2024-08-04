@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { AuthRoutes } from "../modules/Auth/auth.route";
-import { BikeRoutes } from "../modules/Booking/booking.route";
+import { BikeRoutes } from "../modules/Bike/bike.route";
+import { RentalRoutes } from "../modules/Booking/booking.route";
+
 
 const router = Router();
 
@@ -10,8 +12,16 @@ const moduleRoutes = [
     route: AuthRoutes,
   },
   {
+    path: "/users",
+    route: AuthRoutes,
+  },
+  {
     path: "/bikes",
     route: BikeRoutes,
+  },
+  {
+    path: "/rentals",
+    route: RentalRoutes,
   },
 ];
 

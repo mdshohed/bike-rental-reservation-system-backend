@@ -10,11 +10,13 @@ This a bike rental system where users could easily rent bikes online. User would
 ## npm package
 - dotenv
 - cors(dependencies/devDependencies)
-- express (dependencies/devDependencies)
+- express(dependencies/devDependencies)
 - mongoose
-- cookie-parser (dependencies/devDependencies)
+- cookie-parser(dependencies/devDependencies)
 - Zod
 - eslint
 - prettier
 - http-status
+- jsonwebtoken(dependencies/devDependencies)
+- bcrypt(dependencies/devDependencies)
 

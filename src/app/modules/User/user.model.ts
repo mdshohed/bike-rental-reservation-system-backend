@@ -1,21 +1,25 @@
 import { model, Schema } from "mongoose";
-import { TUser } from "./user.interface";
+import { TUser, UserModel } from "./user.interface";
+import bcrypt from 'bcrypt';
+import config from "../../config";
 
-const UserSchema = new Schema<TUser>({
+const userSchema = new Schema<TUser>({
     name: { 
       type: String, 
       require: true
     },
     email: { 
       type: String, 
+      unique: true,
       require: true
     },
     password: { 
       type: String, 
-      require: true
+      require: true,
+      select: 0,
     },
     phone: { 
-      type: Number, 
+      type: String, 
       require: true
     },
     address: { 
@@ -31,6 +35,36 @@ const UserSchema = new Schema<TUser>({
       type: String, 
       require: true
     },
- })
+ },
+ {
+    timestamps: true,
+    toJSON: {
+      transform: function(doc, ret) {
+        delete ret.password;
+        return ret;
+      }
+    }
+  }
+)
 
-export const User = model<TUser>("User", UserSchema);
+userSchema.pre('save', async function(next){
+  const user = this; 
+  user.password = await bcrypt.hash(user.password, Number( config.bcrypt_salt_rounds ));
+  next(); 
+})
+
+userSchema.post('save', async function(doc, next){
+  doc.password = '';
+  next();
+})
+
+userSchema.statics.isUserExistsByCustomEmail = async function(email: string) {
+  return await User.findOne({email}).select('+password');
+}
+
+userSchema.statics.isPasswordMatched = async function (plainTextPassword,hashedPassword,) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+
+export const User = model<TUser, UserModel>("User", userSchema);

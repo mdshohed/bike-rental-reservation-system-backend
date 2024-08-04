@@ -1,9 +1,10 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
+import { BookingServices } from "./booking.service";
 
 const createRental = catchAsync(async ( req, res)=>{
-  const result = await BikeServices.createBikeIntoDB(req.body);
+  const result = await BookingServices.createRentalIntoDB();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -14,7 +15,7 @@ const createRental = catchAsync(async ( req, res)=>{
 })
 
 const getAllRentals = catchAsync(async ( req, res)=>{
-  const result = await BikeServices.createBikeIntoDB(req.body);
+  const result = await BookingServices.getAllRentalsFromDB();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -25,7 +26,7 @@ const getAllRentals = catchAsync(async ( req, res)=>{
 })
 
 const returnBike = catchAsync(async ( req, res)=>{
-  const result = await BikeServices.createBikeIntoDB(req.body);
+  const result = await BookingServices.returnBikeInToDB();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

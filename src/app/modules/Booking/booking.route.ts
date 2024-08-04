@@ -10,7 +10,7 @@ router.get("/", BookingControllers.getAllRentals);
 
 router.put(
   "/:id/return",
-  validateRequest(),
+  // validateRequest(),
   BookingControllers.returnBike,
 );
 

@@ -35,11 +35,6 @@ const bikeSchema = new Schema<TBike>({
     type: String, 
     required: true 
   },
-  // isDeleted: {
-  //   type: Boolean,
-  //   default: false,
-  // },
-  
 },
 {
   timestamps: true,

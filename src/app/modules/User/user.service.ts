@@ -1,4 +1,4 @@
-import { TUser } from "./user.interface";
+
 import { User } from "./user.model";
 
 const getProfileFromDB = async (query: Record<string, unknown>) => {

@@ -1,3 +1,4 @@
+import { USER_ROLE } from "./user.constant";
 
 export interface TUser {
   name: string;
@@ -8,3 +9,5 @@ export interface TUser {
   role: "admin" | "user";
   isDeleted?: boolean;
 }
+
+export type TUserRole = keyof typeof USER_ROLE;

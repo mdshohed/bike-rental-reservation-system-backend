@@ -1,11 +1,12 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { BookingServices } from "./booking.service";
+import { RentalServices } from "./rental.service";
 
 const createRental = catchAsync(async ( req, res)=>{
-  const result = await BookingServices.createRentalIntoDB();
-
+  const { refreshToken } = req.cookies;
+  const result = await RentalServices.createRentalIntoDB(refreshToken, req.body);
+  
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -15,7 +16,8 @@ const createRental = catchAsync(async ( req, res)=>{
 })
 
 const getAllRentals = catchAsync(async ( req, res)=>{
-  const result = await BookingServices.getAllRentalsFromDB();
+  const { refreshToken } = req.cookies;
+  const result = await RentalServices.getAllRentalsFromDB(refreshToken);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -26,7 +28,9 @@ const getAllRentals = catchAsync(async ( req, res)=>{
 })
 
 const returnBike = catchAsync(async ( req, res)=>{
-  const result = await BookingServices.returnBikeInToDB();
+  const {id} = req.params;
+  const { refreshToken } = req.cookies;
+  const result = await RentalServices.returnBikeInToDB(refreshToken, id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -37,7 +41,7 @@ const returnBike = catchAsync(async ( req, res)=>{
 })
 
 
-export const BookingControllers = {
+export const RentalControllers = {
   createRental,
   getAllRentals,
   returnBike

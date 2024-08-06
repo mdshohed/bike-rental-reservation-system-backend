@@ -1,3 +1,5 @@
+import jwt, { JwtPayload } from "jsonwebtoken";
+import config from "../config";
 import { TAcademicSemester } from "../modules/academicSemester/academicSemester.interface";
 import { User } from "../modules/user/user.model";
 
@@ -39,3 +41,10 @@ export const generateStudentId = async ( payload: TAcademicSemester) =>{
   return incrementId; 
 }
 
+export const currentUser = async (token: string) =>{
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refresh_secret as string,
+  ) as JwtPayload;
+  return decoded;
+}

@@ -26,7 +26,6 @@ const getProfileFromDB = async (token: string) => {
 
 const updateProfileIntoDB = async (token: string, payload: Partial<TUser>) =>{
   // checking if the given token is valid
-  console.log(payload);
   
   const decoded = jwt.verify(
     token,

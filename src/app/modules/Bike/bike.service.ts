@@ -1,3 +1,4 @@
+
 import { TBike } from "./bike.interface";
 import { Bike } from "./bike.model";
 
@@ -24,7 +25,13 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const updateBikeFromDB = async (id: string, payload: Partial<TBike>) => {
-
+  
+  const result = await Bike.findByIdAndUpdate( { id }, payload, 
+    {
+      new: true
+    }
+  );
+  return result; 
 }
 
 const deleteBikeFromDB = async (id: string) => {

@@ -13,7 +13,7 @@ const timeStringSchema = z.string().refine(
 export const createRentalValidationSchema = z.object({
   body: z.object({
     bikeId: z.string(),
-    startTime: timeStringSchema,
+    startTime: z.string(),
   }),
 });
 

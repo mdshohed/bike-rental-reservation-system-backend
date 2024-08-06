@@ -1,24 +1,24 @@
 import express from "express";
 import validateRequest from "../../middlewares/validateRequest";
-import { BookingControllers } from "./booking.controller";
-import { createRentalValidationSchema } from "./booking.validation";
+import { RentalControllers } from "./rental.controller";
+import { createRentalValidationSchema } from "./rental.validation";
 
 const router = express.Router();
 
 router.post(
   "/",
   validateRequest(createRentalValidationSchema),
-  BookingControllers.createRental
+  RentalControllers.createRental
 );
 
 router.get(
   "/", 
-  BookingControllers.getAllRentals
+  RentalControllers.getAllRentals
 );
 
 router.put(
   "/:id/return",
-  BookingControllers.returnBike,
+  RentalControllers.returnBike,
 );
 
 export const RentalRoutes = router;

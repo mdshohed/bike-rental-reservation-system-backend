@@ -47,3 +47,16 @@ JWT_REFRESH_EXPIRES_IN=365d
 
 
 - To Start this project. you have run npm command: `npm run start:dev`
+
+## How to live this project in vercel:
+```
+npm i -g vercel
+vercel -v
+vercel login
+vercel --prod
+-  setup and deploy: - y
+-  which scope do you want to deploy to: projects
+-  link to existing project: no
+-  what's your project's name: bike-rental-reservation-system-server
+-  In which directory is your code located: ./
+```

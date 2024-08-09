@@ -11,9 +11,20 @@ const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
 
+    // console.log(authHeader);
+    // const token = authHeader.split(' ')[1];
+    console.log(token);
+    
+
     // checking if the token is missing
     if (!token) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You have no access to this route');
+    }
+
+    const { refreshToken } = req.cookies;
+
+    if(!refreshToken){
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You have no access to this route')
     }
 
     // checking if the given token is valid
@@ -23,7 +34,8 @@ const auth = (...requiredRoles: TUserRole[]) => {
     ) as JwtPayload;
 
     const { role, userEmail, iat } = decoded;
-
+    // console.log(userEmail);
+    
     // checking if the user is exist
     const user = await User.isUserExistsByCustomEmail(userEmail);
 
@@ -55,7 +67,9 @@ const auth = (...requiredRoles: TUserRole[]) => {
       );
     }
 
-    // req.user = decoded as JwtPayload;
+    req.user = decoded as JwtPayload;
+    
+    
     next();
   });
 };

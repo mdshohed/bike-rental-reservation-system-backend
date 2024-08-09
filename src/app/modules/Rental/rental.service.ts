@@ -13,7 +13,7 @@ const createRentalIntoDB = async (token: string, payload: TBooking ) =>{
     bikeId,
     startTime
   } = payload; 
-  const decoded = jwt.verify(
+  const decoded = await jwt.verify(
     token,
     config.jwt_refresh_secret as string,
   ) as JwtPayload;
@@ -27,18 +27,32 @@ const createRentalIntoDB = async (token: string, payload: TBooking ) =>{
   
   const bike = await Bike.findById( bikeId )
   
-  if (!user) {
+  if (!bike) {
     throw new AppError(httpStatus.NOT_FOUND, 'Bike is not found !');
   }
 
-  const duplicateRentals = await Rental.findOne({
-    $and: [
-      { userId: user?._id },
-      { bikeId: bike?._id },
-    ],
-  })
-  if(duplicateRentals){
-    const id = duplicateRentals?._id;
+  const existingRentals = await Rental.find({ bikeId: bike?._id, isReturned: false });
+
+  if (existingRentals.length > 0) {
+    throw new AppError(httpStatus.CONFLICT, 'This bike is currently rented and not yet returned.');
+  }
+
+  const duplicateRental = await Rental.findOne({ userId: user?._id, bikeId: bike?._id })
+  
+  if(duplicateRental){
+    const id = duplicateRental?._id;
+    
+    const result = await Rental.findByIdAndUpdate( id, 
+      { isReturned: false, startTime: startTime, returnTime: null, totalCost: 0 }, 
+      {
+        $new: true,
+      }
+    );
+    const result2 = await Rental.findById(result?._id); 
+    return result2; 
+  }
+  else{
+   
     const bookingPayload = {
       userId: user?._id,
       bikeId: bike?._id,
@@ -47,28 +61,9 @@ const createRentalIntoDB = async (token: string, payload: TBooking ) =>{
       totalCost: 0,
       isReturned: false, 
     }
-    const result = await Rental.findOneAndUpdate( id, bookingPayload, {
-      $new: true,
-    });
+    const result = await Rental.create(bookingPayload);
     return result; 
   }
-
-  const existingRentals = await Rental.find({ bikeId: bike?._id, isReturned: false });
-
-  if (existingRentals.length > 0) {
-    throw new AppError(httpStatus.CONFLICT, 'This bike is currently rented and not yet returned.');
-  }
-  
-  const bookingPayload = {
-    userId: user?._id,
-    bikeId: bike?._id,
-    startTime: startTime,
-    returnTime: null,
-    totalCost: 0,
-    isReturned: false, 
-  }
-  const result = await Rental.create(bookingPayload);
-  return result; 
 }
 
 const getAllRentalsFromDB = async (token: string) =>{
@@ -92,9 +87,20 @@ const returnBikeInToDB = async (token: string, id: string) =>{
   if(rentalExits.isReturned) {
     throw new AppError(httpStatus.FOUND, 'Rental already returned!');
   }
-  const result = Rental.findByIdAndUpdate(
+  const startTime = rentalExits.startTime;
+  const currentTime = new Date();
+  const timeDiffer = currentTime.getTime() - startTime.getTime();
+
+  const hours = timeDiffer / (1000 * 60 * 60);
+  console.log(hours, startTime, currentTime);
+  
+  // Calculate the total cost
+  const pricePerHour = 15;
+  const totalCost = hours * pricePerHour;
+  
+  const result = await Rental.findByIdAndUpdate(
     id,
-    { isReturned: true, returnTime: new Date() },
+    { isReturned: true, returnTime: new Date(), totalCost: totalCost },
     {
       new: true,
       // runValidators: true,

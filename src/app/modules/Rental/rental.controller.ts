@@ -5,7 +5,10 @@ import { RentalServices } from "./rental.service";
 
 const createRental = catchAsync(async ( req, res)=>{
   const { refreshToken } = req.cookies;
+  console.log({refreshToken});
+  
   const result = await RentalServices.createRentalIntoDB(refreshToken, req.body);
+  console.log(result, req.body);
   
   sendResponse(res, {
     statusCode: httpStatus.OK,

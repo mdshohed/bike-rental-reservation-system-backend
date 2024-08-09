@@ -34,5 +34,27 @@ const RentalSchema = new Schema<TRental>({
   timestamps: true,
 });
 
+// RentalSchema.pre('findOneAndUpdate', async function (next) {
+//   const query = this.getQuery();
+//   console.log(this.query.returnTime);
+  
+//   // const isDepartmentExist = await Rental.findOne(query);
+
+//   // if (!isDepartmentExist) {
+//   //   throw new AppError(
+//   //     httpStatus.NOT_FOUND,
+//   //     'This department does not exist! ',
+//   //   );
+//   // }
+
+//   next();
+// });
+
+// RentalSchema.post('save', async function(doc, next){
+//   console.log(doc);
+  
+//   // next();
+// })
+
 
 export const Rental = model<TRental>("Rental", RentalSchema);

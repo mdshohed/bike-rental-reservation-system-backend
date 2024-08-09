@@ -1,45 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config";
-import { TAcademicSemester } from "../modules/academicSemester/academicSemester.interface";
-import { User } from "../modules/user/user.model";
-
-export const findLastStudentId = async() =>{
-  const lastStudent = await User.findOne(
-    {
-      role: 'student',
-    },
-    {
-      id: 1, 
-      _id: 0, 
-    }
-  )
-  .sort({createdAt: -1})
-  .lean(); 
-  
-  return lastStudent?.id ? lastStudent.id.substring(6) : undefined; 
-}
-
-
- // year semester 4 digit number 
-export const generateStudentId = async ( payload: TAcademicSemester) =>{
-  // const currentId = (0).toString().padStart(4, '0'); 
-  // const currentId = await findLastStudentId() || (0).toString(); 
-  let currentId = (0).toString(); 
-  const lastStudentId = await findLastStudentId();
-  const lastStudentSemesterCode = lastStudentId?.substring(4,6); 
-  const lastStudentYear = lastStudentId?.substring(0,4); 
-  const currentSemesterCode = payload.code; 
-  const currentYear = payload.year;
-
-  if(lastStudentId && lastStudentSemesterCode=== currentSemesterCode &&
-    lastStudentYear===currentYear 
-  ){
-    currentId = lastStudentId.substring(6);
-  }
-  let incrementId = (Number(currentId) + 1).toString().padStart(4,'0'); 
-  incrementId = `${payload.year}${payload.code}${incrementId}`; 
-  return incrementId; 
-}
 
 export const currentUser = async (token: string) =>{
   const decoded = jwt.verify(

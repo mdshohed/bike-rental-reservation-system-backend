@@ -16,15 +16,19 @@ const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const routes_1 = __importDefault(require("./app/routes"));
+const globalErrorhandler_1 = __importDefault(require("./app/middlewares/globalErrorhandler"));
+const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const app = (0, express_1.default)();
 // parsers
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({ origin: ['http://localhost:5000'] }));
-// application routes 
-app.use('/api/v1', routes_1.default);
+app.use((0, cors_1.default)({ origin: ["http://localhost:5000"] }));
+// application routes
+app.use("/api", routes_1.default);
 const test = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     Promise.reject();
 });
-app.get('/', test);
+app.get("/", test);
+app.use(globalErrorhandler_1.default);
+app.use(notFound_1.default);
 exports.default = app;

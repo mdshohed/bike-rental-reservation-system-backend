@@ -7,27 +7,13 @@ This a bike rental system where users could easily rent bikes online. User would
 - Web Framework: Express.js
 - ODM & Validation Library: Zod, Mongoose for MongoDB
 
-## npm package
-- dotenv
-- cors(dependencies/devDependencies)
-- express(dependencies/devDependencies)
-- mongoose
-- cookie-parser(dependencies/devDependencies)
-- Zod
-- eslint
-- prettier
-- http-status
-- jsonwebtoken(dependencies/devDependencies)
-- bcrypt(dependencies/devDependencies)
-
-
-## how to run this project
+## How to run this project
 
 - first of all clone this project from github. Then go to project path and install npm package.
 
 ```
 git clone 
-cd e-commerce-backend-api
+cd bike-rental-reservation-system-backend
 npm install
 ```
 
@@ -60,3 +46,16 @@ vercel --prod
 -  what's your project's name: bike-rental-reservation-system-server
 -  In which directory is your code located: ./
 ```
+
+## npm package
+- dotenv
+- cors(dependencies/devDependencies)
+- express(dependencies/devDependencies)
+- mongoose
+- cookie-parser(dependencies/devDependencies)
+- Zod
+- eslint
+- prettier
+- http-status
+- jsonwebtoken(dependencies/devDependencies)
+- bcrypt(dependencies/devDependencies)

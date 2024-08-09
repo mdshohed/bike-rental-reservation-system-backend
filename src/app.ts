@@ -19,7 +19,11 @@ const test = async (req: Request, res: Response) => {
   Promise.reject();
 };
 
-app.get("/", test);
+app.get("/", (req: Request, res: Response) => {
+  res.status(404).json({
+    message: "Welcome to bike-rental-reservation-system-server",
+  });
+});
 
 app.use(globalErrorHandler);
 app.use(notFound);

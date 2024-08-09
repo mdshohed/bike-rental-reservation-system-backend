@@ -28,7 +28,11 @@ app.use("/api", routes_1.default);
 const test = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     Promise.reject();
 });
-app.get("/", test);
+app.get("/", (req, res) => {
+    res.status(404).json({
+        message: "Welcome to bike-rental-reservation-system-server",
+    });
+});
 app.use(globalErrorhandler_1.default);
 app.use(notFound_1.default);
 exports.default = app;

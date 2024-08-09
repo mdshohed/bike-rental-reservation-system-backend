@@ -3,27 +3,25 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { BikeServices } from "./bike.service";
 
-
-const createBike = catchAsync(async ( req, res)=>{
+const createBike = catchAsync(async (req, res) => {
   const result = await BikeServices.createBikeIntoDB(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Bike added successfully',
+    message: "Bike added successfully",
     data: result,
   });
-})
+});
 
 const getAllBikes = catchAsync(async (req, res) => {
   const result = await BikeServices.getAllBikesFromDB(req.query);
   // console.log({result});
-  
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Bikes retrieved successfully',
+    message: "Bikes retrieved successfully",
     data: result,
   });
 });
@@ -35,7 +33,7 @@ const updateBike = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Bike updated successfully',
+    message: "Bike updated successfully",
     data: result,
   });
 });
@@ -47,7 +45,7 @@ const deleteBike = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Bike deleted successfully',
+    message: "Bike deleted successfully",
     data: result,
   });
 });
@@ -57,4 +55,4 @@ export const BikeControllers = {
   getAllBikes,
   updateBike,
   deleteBike,
-}; 
+};

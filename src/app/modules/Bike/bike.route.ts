@@ -7,10 +7,11 @@ import { USER_ROLE } from "../User/user.constant";
 
 const router = express.Router();
 
-router.post("/",
+router.post(
+  "/",
   auth(USER_ROLE.admin),
   validateRequest(BikeValidations.createBikeValidationSchema),
-  BikeControllers.createBike
+  BikeControllers.createBike,
 );
 
 router.get("/", BikeControllers.getAllBikes);
@@ -23,7 +24,7 @@ router.put(
 );
 
 router.delete("/:id", 
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin), 
   BikeControllers.deleteBike
 );
 

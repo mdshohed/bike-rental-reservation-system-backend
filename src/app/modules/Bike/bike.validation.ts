@@ -12,7 +12,7 @@ const createBikeValidationSchema = z.object({
     brand: z.string(),
     // isDeleted: z.boolean().optional(),
   }),
-})
+});
 
 const updateBikeValidationSchema = z.object({
   body: z.object({
@@ -26,9 +26,9 @@ const updateBikeValidationSchema = z.object({
     brand: z.string().optional(),
     isDeleted: z.boolean().optional(),
   }),
-})
+});
 
 export const BikeValidations = {
   createBikeValidationSchema,
-  updateBikeValidationSchema
-}
+  updateBikeValidationSchema,
+};

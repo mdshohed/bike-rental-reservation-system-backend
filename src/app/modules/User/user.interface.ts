@@ -13,7 +13,11 @@ export interface TUser {
 
 export interface UserModel extends Model<TUser> {
   isUserExistsByCustomEmail(id: string): Promise<TUser>;
-  isPasswordMatched(plainTextPassword: string, hashedPassword: string,): Promise<boolean>;
+  isPasswordMatched(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean>;
 }
 
+// @typescript-eslint/no-unused-vars
 export type TUserRole = keyof typeof USER_ROLE;

@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const createUserValidationSchema = z.object({
   body: z.object({
@@ -21,4 +21,3 @@ export const updateUserValidationSchema = z.object({
     role: z.enum(["admin", "user"]).optional(),
   }),
 });
-

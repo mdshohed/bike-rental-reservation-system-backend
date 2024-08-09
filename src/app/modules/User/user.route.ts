@@ -5,17 +5,19 @@ import { updateUserValidationSchema } from "./user.validation";
 import auth from "../../middlewares/auth";
 import { USER_ROLE } from "./user.constant";
 
-const router = express.Router(); 
+const router = express.Router();
 
-router.get('/me',
+router.get(
+  "/me",
   auth(USER_ROLE.admin, USER_ROLE.user),
-  UserControllers.getProfile
+  UserControllers.getProfile,
 );
 
-router.put('/me',
+router.put(
+  "/me",
   auth(USER_ROLE.admin, USER_ROLE.user),
   validateRequest(updateUserValidationSchema),
-  UserControllers.updateProfile
+  UserControllers.updateProfile,
 );
 
-export const UserRoutes = router; 
+export const UserRoutes = router;

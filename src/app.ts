@@ -19,11 +19,9 @@ const test = async (req: Request, res: Response) => {
   Promise.reject();
 };
 
-
-
 app.get("/", test);
 
-app.use(globalErrorHandler)
-app.use(notFound); 
+app.use(globalErrorHandler);
+app.use(notFound);
 
 export default app;

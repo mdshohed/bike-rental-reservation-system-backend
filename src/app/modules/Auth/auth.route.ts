@@ -9,13 +9,13 @@ const router = express.Router();
 router.post(
   "/signup",
   validateRequest(createUserValidationSchema),
-  AuthControllers.signUpUser
+  AuthControllers.signUpUser,
 );
 
 router.post(
   "/login",
   validateRequest(AuthValidation.loginValidationSchema),
-  AuthControllers.loginUser
+  AuthControllers.loginUser,
 );
 
 export const AuthRoutes = router;

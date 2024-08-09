@@ -12,4 +12,4 @@ export interface TRental {
 export type TBooking = {
   bikeId: Types.ObjectId;
   startTime: Date;
-}
+};

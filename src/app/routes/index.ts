@@ -4,7 +4,6 @@ import { BikeRoutes } from "../modules/Bike/bike.route";
 import { RentalRoutes } from "../modules/Rental/rental.route";
 import { UserRoutes } from "../modules/User/user.route";
 
-
 const router = Router();
 
 const moduleRoutes = [

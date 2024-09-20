@@ -10,7 +10,10 @@ const app: Application = express();
 // parsers
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: ["http://localhost:5000"] }));
+app.use(cors({
+  origin: '*', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+}));
 
 // application routes
 app.use("/api", router);

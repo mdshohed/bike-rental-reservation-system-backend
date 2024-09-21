@@ -30,6 +30,7 @@ const userSchema = new Schema<TUser>(
     role: {
       type: String,
       require: true,
+      default: 'user',
       enum: ["admin", "user"],
     },
     isDeleted: {

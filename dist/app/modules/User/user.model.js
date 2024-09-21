@@ -42,6 +42,7 @@ const userSchema = new mongoose_1.Schema({
     role: {
         type: String,
         require: true,
+        default: 'user',
         enum: ["admin", "user"],
     },
     isDeleted: {

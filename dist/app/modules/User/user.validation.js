@@ -9,7 +9,7 @@ exports.createUserValidationSchema = zod_1.z.object({
         password: zod_1.z.string(),
         phone: zod_1.z.string(),
         address: zod_1.z.string(),
-        role: zod_1.z.enum(["admin", "user"]),
+        role: zod_1.z.enum(["admin", "user"]).optional(),
     }),
 });
 exports.updateUserValidationSchema = zod_1.z.object({

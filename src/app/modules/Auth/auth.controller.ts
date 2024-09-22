@@ -41,19 +41,22 @@ const changePassword = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Password is updated succesfully!',
+    message: 'Password is updated successfully!',
     data: result,
   });
 });
 
 const refreshToken = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
+  // console.log("refreshToken", refreshToken);
+  
   const result = await AuthServices.refreshToken(refreshToken);
-
+  // console.log("refreshToken", result);
+  
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Access token is retrieved succesfully!',
+    message: 'Access token is retrieved successfully!',
     data: result,
   });
 });
@@ -65,7 +68,7 @@ const forgetPassword = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Reset List is generated succesfully!',
+    message: 'Reset List is generated successfully!',
     data: result,
   });
 });
@@ -82,7 +85,7 @@ const resetPassword = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Password Reset succesfully!',
+    message: 'Password Reset successfully!',
     data: result,
   });
 })

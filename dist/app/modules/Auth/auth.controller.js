@@ -82,17 +82,19 @@ const changePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Password is updated succesfully!',
+        message: 'Password is updated successfully!',
         data: result,
     });
 }));
 const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { refreshToken } = req.cookies;
+    // console.log("refreshToken", refreshToken);
     const result = yield auth_service_1.AuthServices.refreshToken(refreshToken);
+    // console.log("refreshToken", result);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Access token is retrieved succesfully!',
+        message: 'Access token is retrieved successfully!',
         data: result,
     });
 }));
@@ -102,7 +104,7 @@ const forgetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Reset List is generated succesfully!',
+        message: 'Reset List is generated successfully!',
         data: result,
     });
 }));
@@ -113,7 +115,7 @@ const resetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Password Reset succesfully!',
+        message: 'Password Reset successfully!',
         data: result,
     });
 }));

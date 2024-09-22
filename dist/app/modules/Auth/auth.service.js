@@ -77,7 +77,7 @@ const changePassword = (userData, payload) => __awaiter(void 0, void 0, void 0, 
 });
 const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
     // checking if the given token is valid
-    const decoded = (0, auth_utils_1.verifyToken)(token, config_1.default.jwt_access_secret);
+    const decoded = (0, auth_utils_1.verifyToken)(token, config_1.default.jwt_refresh_secret);
     const { userEmail, iat } = decoded;
     // checking if the user is exist
     const user = yield user_model_1.User.isUserExistsByCustomEmail(userEmail);

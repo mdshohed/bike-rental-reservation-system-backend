@@ -19,7 +19,9 @@ router.get(
   auth(USER_ROLE.admin, USER_ROLE.user),
   RentalControllers.getAllRentals,
 );
+router.put("/:id", auth(USER_ROLE.admin, USER_ROLE.user), RentalControllers.updateRental);
 
 router.put("/:id/return", auth(USER_ROLE.admin), RentalControllers.returnBike);
+
 
 export const RentalRoutes = router;

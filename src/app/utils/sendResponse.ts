@@ -10,13 +10,13 @@ type TResponse<T> = {
 };
 
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {
-  if (data.data === null || data.data === undefined || (Array.isArray(data.data) && data.data.length === 0)) {
-    res.status(httpStatus.NOT_FOUND).json({
-      success: false,
-      message: "No Data Found",
-      data: data.data,
-    });
-  }
+  // if (data.data === null || data.data === undefined || (Array.isArray(data.data) && data.data.length === 0)) {
+  //   res.status(httpStatus.NOT_FOUND).json({
+  //     success: false,
+  //     message: "No Data Found",
+  //     data: data.data,
+  //   });
+  // }
   res.status(data.statusCode).json({
     success: data.success,
     statusCode: data.statusCode,

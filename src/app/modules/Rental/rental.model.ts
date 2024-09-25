@@ -28,6 +28,16 @@ const RentalSchema = new Schema<TRental>(
     isReturned: {
       type: Boolean,
       required: true,
+      default: false
+    },
+    totalPaid: {
+      type: Number,
+      required: true,
+    },
+    isPaid: {
+      type: Boolean,
+      required: true,
+      default: false
     },
   },
 );

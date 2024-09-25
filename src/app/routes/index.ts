@@ -3,6 +3,7 @@ import { AuthRoutes } from "../modules/Auth/auth.route";
 import { BikeRoutes } from "../modules/Bike/bike.route";
 import { RentalRoutes } from "../modules/Rental/rental.route";
 import { UserRoutes } from "../modules/User/user.route";
+import { StripeRoutes } from "../modules/Stripe/stripe.route";
 
 const router = Router();
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: "/rentals",
     route: RentalRoutes,
+  },
+  {
+    path: "/create-payment-intent",
+    route: StripeRoutes,
   },
 ];
 

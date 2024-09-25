@@ -7,9 +7,13 @@ export interface TRental {
   returnTime: Date;
   totalCost: number;
   isReturned: boolean;
+  totalPaid: number, 
+  isPaid: boolean, 
 }
 
 export type TBooking = {
   bikeId: Types.ObjectId;
   startTime: Date;
+  totalPaid: number, 
+  isPaid: boolean, 
 };

@@ -4,10 +4,10 @@ import sendResponse from "../../utils/sendResponse";
 import { RentalServices } from "./rental.service";
 
 const createRental = catchAsync(async (req, res) => {
-  const { refreshToken } = req.cookies;
+  const token = req.headers.authorization || '';
 
   const result = await RentalServices.createRentalIntoDB(
-    refreshToken,
+    token,
     req.body,
   );
 
@@ -20,8 +20,8 @@ const createRental = catchAsync(async (req, res) => {
 });
 
 const getAllRentals = catchAsync(async (req, res) => {
-  const { refreshToken } = req.cookies;
-  const result = await RentalServices.getAllRentalsFromDB(refreshToken);
+  const token = req.headers.authorization || '';
+  const result = await RentalServices.getAllRentalsFromDB(token);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -33,8 +33,8 @@ const getAllRentals = catchAsync(async (req, res) => {
 
 const returnBike = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { refreshToken } = req.cookies;
-  const result = await RentalServices.returnBikeInToDB(refreshToken, id);
+  const token = req.headers.authorization || '';
+  const result = await RentalServices.returnBikeInToDB(token, id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -44,8 +44,25 @@ const returnBike = catchAsync(async (req, res) => {
   });
 });
 
+const updateRental = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization || '';
+  const totalPaid = req.body; 
+  console.log(totalPaid, id);
+  
+  const result = await RentalServices.updateRentalBikeInToDB(token, id, totalPaid.totalPaid);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Rental Payment Updated successfully!",
+    data: result,
+  });
+});
+
 export const RentalControllers = {
   createRental,
   getAllRentals,
   returnBike,
+  updateRental, 
 };

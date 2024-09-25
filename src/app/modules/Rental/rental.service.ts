@@ -9,10 +9,10 @@ import httpStatus from "http-status";
 import { Bike } from "../Bike/bike.model";
 
 const createRentalIntoDB = async (token: string, payload: TBooking) => {
-  const { bikeId, startTime } = payload;
-  const decoded = (await jwt.verify(
+  const { bikeId, startTime, totalPaid  } = payload;
+  const decoded = ( jwt.verify(
     token,
-    config.jwt_refresh_secret as string,
+    config.jwt_access_secret as string,
   )) as JwtPayload;
   const { userEmail } = decoded;
 
@@ -69,7 +69,9 @@ const createRentalIntoDB = async (token: string, payload: TBooking) => {
       startTime: startTime,
       returnTime: null,
       totalCost: 0,
+      totalPaid: totalPaid,
       isReturned: false,
+      isPaid: false,
     };
     const result = await Rental.create(bookingPayload);
     return result;
@@ -79,11 +81,19 @@ const createRentalIntoDB = async (token: string, payload: TBooking) => {
 const getAllRentalsFromDB = async (token: string) => {
   const decoded = jwt.verify(
     token,
-    config.jwt_refresh_secret as string,
+    config.jwt_access_secret as string,
   ) as JwtPayload;
-  const { userEmail } = decoded;
-  const userId = await User.findOne({ email: userEmail }).select("_id");
-  const result = await Rental.find({ userId: userId });
+  const { userEmail, role} = decoded;
+ 
+  let result; 
+  if(role=='admin'){
+    result = await Rental.find().populate('bikeId').populate('userId');
+  }
+  else{
+    const userId = await User.findOne({ email: userEmail }).select("_id");
+    result = await Rental.find({ userId: userId }).populate('bikeId').populate('userId');
+  }
+  
   return result;
 };
 
@@ -123,8 +133,42 @@ const returnBikeInToDB = async (token: string, id: string) => {
   return result;
 };
 
+const updateRentalBikeInToDB = async (token: string, id: string, currentPaid: number) => {
+  const rentalExits = await Rental.findById(id);
+
+  if (!rentalExits) {
+    throw new AppError(httpStatus.NOT_FOUND, "Rental not found!");
+  }
+  const pricePerHour = await Bike.findById(rentalExits.bikeId).select('pricePerHour');
+  
+  if (!pricePerHour) {
+    throw new AppError(httpStatus.FOUND, "Bike Not Found");
+  }
+  const startTime = rentalExits.startTime;
+  const currentTime = new Date();
+  const timeDiffer = currentTime.getTime() - startTime.getTime();
+
+  const hours = timeDiffer / (1000 * 60 * 60);
+
+  // Calculate the total cost
+  const pricePerHourValue = pricePerHour.pricePerHour;
+  const totalCost = hours * pricePerHourValue;
+  const totalPaid = rentalExits.totalPaid + currentPaid; 
+
+  const result = await Rental.findByIdAndUpdate(
+    id,
+    { isPaid:  totalPaid >= totalCost, totalPaid: totalPaid },
+    {
+      new: true,
+      // runValidators: true,
+    },
+  );
+  return result;
+};
+
 export const RentalServices = {
   createRentalIntoDB,
   getAllRentalsFromDB,
   returnBikeInToDB,
+  updateRentalBikeInToDB,
 };

@@ -9,7 +9,7 @@ const getProfileFromDB = async (token: string) => {
   // checking if the given token is valid
   const decoded = jwt.verify(
     token,
-    config.jwt_refresh_secret as string,
+    config.jwt_access_secret as string,
   ) as JwtPayload;
 
   const { userEmail } = decoded;
@@ -28,7 +28,7 @@ const updateProfileIntoDB = async (token: string, payload: Partial<TUser>) => {
 
   const decoded = jwt.verify(
     token,
-    config.jwt_refresh_secret as string,
+    config.jwt_access_secret as string,
   ) as JwtPayload;
 
   const { userEmail } = decoded;

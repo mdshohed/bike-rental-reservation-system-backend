@@ -22,8 +22,8 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
 const bike_model_1 = require("../Bike/bike.model");
 const createRentalIntoDB = (token, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { bikeId, startTime } = payload;
-    const decoded = (yield jsonwebtoken_1.default.verify(token, config_1.default.jwt_refresh_secret));
+    const { bikeId, startTime, totalPaid, discount } = payload;
+    const decoded = (jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret));
     const { userEmail } = decoded;
     // checking if the user is exist
     const user = yield user_model_1.User.findOne({ email: userEmail }).select("_id");
@@ -65,17 +65,33 @@ const createRentalIntoDB = (token, payload) => __awaiter(void 0, void 0, void 0,
             startTime: startTime,
             returnTime: null,
             totalCost: 0,
+            totalPaid: totalPaid,
+            discount: discount,
             isReturned: false,
+            isPaid: false,
         };
         const result = yield rental_model_1.Rental.create(bookingPayload);
+        if (result) {
+            yield bike_model_1.Bike.findByIdAndUpdate(bike === null || bike === void 0 ? void 0 : bike._id, { isAvailable: false }, { new: true });
+        }
         return result;
     }
 });
 const getAllRentalsFromDB = (token) => __awaiter(void 0, void 0, void 0, function* () {
-    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_refresh_secret);
-    const { userEmail } = decoded;
-    const userId = yield user_model_1.User.findOne({ email: userEmail }).select("_id");
-    const result = yield rental_model_1.Rental.find({ userId: userId });
+    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret);
+    const { userEmail, role } = decoded;
+    let result;
+    if (role == 'admin') {
+        result = yield rental_model_1.Rental.find().populate('bikeId').populate('userId');
+    }
+    else {
+        const userId = yield user_model_1.User.findOne({ email: userEmail }).select("_id");
+        result = yield rental_model_1.Rental.find({ userId: userId, isReturned: true }).populate('bikeId').populate('userId');
+    }
+    return result;
+});
+const bikeIsAvailableInToDB = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield rental_model_1.Rental.find({ bikeId: id }).populate('bikeId').populate('userId');
     return result;
 });
 const returnBikeInToDB = (token, id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -87,7 +103,6 @@ const returnBikeInToDB = (token, id) => __awaiter(void 0, void 0, void 0, functi
         throw new AppError_1.default(http_status_1.default.FOUND, "Rental already returned!");
     }
     const pricePerHour = yield bike_model_1.Bike.findById(rentalExits.bikeId).select('pricePerHour');
-    console.log(pricePerHour === null || pricePerHour === void 0 ? void 0 : pricePerHour.pricePerHour);
     if (!pricePerHour) {
         throw new AppError_1.default(http_status_1.default.FOUND, "Bike Not Found");
     }
@@ -98,7 +113,34 @@ const returnBikeInToDB = (token, id) => __awaiter(void 0, void 0, void 0, functi
     // Calculate the total cost
     const pricePerHourValue = pricePerHour.pricePerHour;
     const totalCost = hours * pricePerHourValue;
-    const result = yield rental_model_1.Rental.findByIdAndUpdate(id, { isReturned: true, returnTime: new Date(), totalCost: totalCost }, {
+    const totalCostWithDisCount = totalCost - ((totalCost * rentalExits.discount) / 100);
+    const result = yield rental_model_1.Rental.findByIdAndUpdate(id, { isReturned: true, returnTime: new Date(), totalCost: totalCostWithDisCount }, {
+        new: true,
+        // runValidators: true,
+    });
+    if (result) {
+        const bikeStatus = yield bike_model_1.Bike.findByIdAndUpdate(rentalExits.bikeId, { isAvailable: true }, { new: true });
+    }
+    return result;
+});
+const updateRentalBikeInToDB = (token, id, currentPaid) => __awaiter(void 0, void 0, void 0, function* () {
+    const rentalExits = yield rental_model_1.Rental.findById(id);
+    if (!rentalExits) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Rental not found!");
+    }
+    const pricePerHour = yield bike_model_1.Bike.findById(rentalExits.bikeId).select('pricePerHour');
+    if (!pricePerHour) {
+        throw new AppError_1.default(http_status_1.default.FOUND, "Bike Not Found");
+    }
+    const startTime = rentalExits.startTime;
+    const currentTime = rentalExits.returnTime;
+    const timeDiffer = currentTime.getTime() - startTime.getTime();
+    const hours = timeDiffer / (1000 * 60 * 60);
+    const pricePerHourValue = pricePerHour.pricePerHour;
+    const totalCost = (typeof (rentalExits === null || rentalExits === void 0 ? void 0 : rentalExits.totalCost) === 'number' ? rentalExits.totalCost : parseFloat(rentalExits === null || rentalExits === void 0 ? void 0 : rentalExits.totalCost) || 0);
+    const totalPaid = (typeof (rentalExits === null || rentalExits === void 0 ? void 0 : rentalExits.totalPaid) === 'number' ? rentalExits.totalPaid : parseFloat(rentalExits === null || rentalExits === void 0 ? void 0 : rentalExits.totalPaid) || 0) +
+        (typeof currentPaid === 'number' ? currentPaid : parseFloat(currentPaid) || 0);
+    const result = yield rental_model_1.Rental.findByIdAndUpdate(id, { isPaid: totalPaid >= totalCost, totalPaid: totalPaid }, {
         new: true,
         // runValidators: true,
     });
@@ -107,5 +149,7 @@ const returnBikeInToDB = (token, id) => __awaiter(void 0, void 0, void 0, functi
 exports.RentalServices = {
     createRentalIntoDB,
     getAllRentalsFromDB,
+    bikeIsAvailableInToDB,
     returnBikeInToDB,
+    updateRentalBikeInToDB,
 };

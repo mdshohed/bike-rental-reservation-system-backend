@@ -16,7 +16,6 @@ const auth = (...requiredRoles: TUserRole[]) => {
     // console.log({token});
     
     const token = authHeader;
-    console.log({token});
 
     // checking if the token is missing
     if (!token) {
@@ -45,8 +44,6 @@ const auth = (...requiredRoles: TUserRole[]) => {
     //   refreshToken,
     //   config.jwt_refresh_secret as string,
     // ) as JwtPayload; 
-
-    console.log({decoded});
     
     let { role, userEmail } = decoded;
     // let { role: role2, userEmail: userEmail2 } = decoded2;

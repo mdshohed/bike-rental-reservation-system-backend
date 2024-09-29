@@ -19,5 +19,6 @@ export const updateUserValidationSchema = z.object({
     phone: z.string().optional(),
     address: z.string().optional(),
     role: z.enum(["admin", "user"]).optional(),
+    isActive: z.boolean().optional(),
   }),
 });

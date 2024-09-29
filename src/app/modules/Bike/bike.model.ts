@@ -17,8 +17,11 @@ const bikeSchema = new Schema<TBike>(
     },
     isAvailable: {
       type: Boolean,
-      required: true,
       default: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
     cc: {
       type: Number,
@@ -41,12 +44,12 @@ const bikeSchema = new Schema<TBike>(
 
 // filter out deleted documents
 bikeSchema.pre("find", function (next) {
-  this.find({ isAvailable: { $ne: false } });
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
 
 bikeSchema.pre("findOne", function (next) {
-  this.find({ isAvailable: { $ne: false } });
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
 

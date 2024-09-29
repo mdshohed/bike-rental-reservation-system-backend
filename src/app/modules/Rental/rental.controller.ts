@@ -14,7 +14,7 @@ const createRental = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Rental created successfully",
+    message: "Rental booked successfully",
     data: result,
   });
 });
@@ -30,6 +30,20 @@ const getAllRentals = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const bikeIsAvailable = catchAsync(async (req, res) => {
+  const token = req.headers.authorization || '';
+  const {bikeId} = req.body;
+  
+  const result = await RentalServices.bikeIsAvailableInToDB(token, bikeId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Rentals Check successfully",
+    data: result,
+  });
+});
+
 
 const returnBike = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -48,7 +62,6 @@ const updateRental = catchAsync(async (req, res) => {
   const { id } = req.params;
   const token = req.headers.authorization || '';
   const totalPaid = req.body; 
-  console.log(totalPaid, id);
   
   const result = await RentalServices.updateRentalBikeInToDB(token, id, totalPaid.totalPaid);
 
@@ -63,6 +76,7 @@ const updateRental = catchAsync(async (req, res) => {
 export const RentalControllers = {
   createRental,
   getAllRentals,
+  bikeIsAvailable,
   returnBike,
   updateRental, 
 };

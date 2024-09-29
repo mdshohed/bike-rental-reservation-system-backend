@@ -16,6 +16,7 @@ const createBike = catchAsync(async (req, res) => {
 
 const getAllBikes = catchAsync(async (req, res) => {
   const result = await BikeServices.getAllBikesFromDB(req.query);
+  
   // console.log({result});
 
   sendResponse(res, {
@@ -28,7 +29,6 @@ const getAllBikes = catchAsync(async (req, res) => {
 
 const getSingleBike = catchAsync(async (req, res) => {
   const id = req.params.id;
-  console.log("ida", id);
   
   const result = await BikeServices.getSingleBikeFromDB(id);
   // console.log({result});

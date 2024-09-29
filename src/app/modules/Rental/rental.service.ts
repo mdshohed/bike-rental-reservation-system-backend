@@ -9,7 +9,7 @@ import httpStatus from "http-status";
 import { Bike } from "../Bike/bike.model";
 
 const createRentalIntoDB = async (token: string, payload: TBooking) => {
-  const { bikeId, startTime, totalPaid  } = payload;
+  const { bikeId, startTime, totalPaid, discount  } = payload;
   const decoded = ( jwt.verify(
     token,
     config.jwt_access_secret as string,
@@ -70,10 +70,14 @@ const createRentalIntoDB = async (token: string, payload: TBooking) => {
       returnTime: null,
       totalCost: 0,
       totalPaid: totalPaid,
+      discount: discount,
       isReturned: false,
       isPaid: false,
     };
     const result = await Rental.create(bookingPayload);
+    if(result){
+      await Bike.findByIdAndUpdate(bike?._id, { isAvailable: false}, {new:true})
+    }
     return result;
   }
 };
@@ -91,9 +95,13 @@ const getAllRentalsFromDB = async (token: string) => {
   }
   else{
     const userId = await User.findOne({ email: userEmail }).select("_id");
-    result = await Rental.find({ userId: userId }).populate('bikeId').populate('userId');
+    result = await Rental.find({ userId: userId, isReturned: true }).populate('bikeId').populate('userId');
   }
-  
+  return result;
+};
+
+const bikeIsAvailableInToDB = async (token: string, id:string) => {
+  const result = await Rental.find({ bikeId: id }).populate('bikeId').populate('userId');
   return result;
 };
 
@@ -107,7 +115,6 @@ const returnBikeInToDB = async (token: string, id: string) => {
     throw new AppError(httpStatus.FOUND, "Rental already returned!");
   }
   const pricePerHour = await Bike.findById(rentalExits.bikeId).select('pricePerHour');
-  console.log(pricePerHour?.pricePerHour);
   
   if (!pricePerHour) {
     throw new AppError(httpStatus.FOUND, "Bike Not Found");
@@ -122,14 +129,19 @@ const returnBikeInToDB = async (token: string, id: string) => {
   const pricePerHourValue = pricePerHour.pricePerHour; 
   const totalCost = hours * pricePerHourValue;
 
+  const totalCostWithDisCount = totalCost - (( totalCost*rentalExits.discount)/100)
+
   const result = await Rental.findByIdAndUpdate(
     id,
-    { isReturned: true, returnTime: new Date(), totalCost: totalCost },
+    { isReturned: true, returnTime: new Date(), totalCost: totalCostWithDisCount },
     {
       new: true,
       // runValidators: true,
     },
   );
+  if(result) {
+    const bikeStatus = await Bike.findByIdAndUpdate(rentalExits.bikeId, {isAvailable: true}, {new: true})
+  }
   return result;
 };
 
@@ -145,15 +157,18 @@ const updateRentalBikeInToDB = async (token: string, id: string, currentPaid: nu
     throw new AppError(httpStatus.FOUND, "Bike Not Found");
   }
   const startTime = rentalExits.startTime;
-  const currentTime = new Date();
+  const currentTime = rentalExits.returnTime;
   const timeDiffer = currentTime.getTime() - startTime.getTime();
 
   const hours = timeDiffer / (1000 * 60 * 60);
 
-  // Calculate the total cost
   const pricePerHourValue = pricePerHour.pricePerHour;
-  const totalCost = hours * pricePerHourValue;
-  const totalPaid = rentalExits.totalPaid + currentPaid; 
+  const totalCost: number =  (typeof rentalExits?.totalCost === 'number' ? rentalExits.totalCost : parseFloat(rentalExits?.totalCost as string) || 0)
+  const totalPaid: number = 
+  (typeof rentalExits?.totalPaid === 'number' ? rentalExits.totalPaid : parseFloat(rentalExits?.totalPaid as string) || 0) + 
+  (typeof currentPaid === 'number' ? currentPaid : parseFloat(currentPaid as string) || 0);
+
+  
 
   const result = await Rental.findByIdAndUpdate(
     id,
@@ -169,6 +184,7 @@ const updateRentalBikeInToDB = async (token: string, id: string, currentPaid: nu
 export const RentalServices = {
   createRentalIntoDB,
   getAllRentalsFromDB,
+  bikeIsAvailableInToDB,
   returnBikeInToDB,
   updateRentalBikeInToDB,
 };

@@ -14,5 +14,7 @@ export const createRentalValidationSchema = z.object({
   body: z.object({
     bikeId: z.string(),
     startTime: z.string(),
+    totalPaid: z.number(),
+    discount: z.number().optional()
   }),
 });

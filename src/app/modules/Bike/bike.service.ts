@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { TBike } from "./bike.interface";
 import { Bike } from "./bike.model";
+import { log } from "console";
 
 const createBikeIntoDB = async (payload: TBike) => {
   const result = await Bike.create(payload);
@@ -14,9 +15,7 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleBikeFromDB = async (id:string) => {
-  const result = await Bike.findById(id);
-  console.log("id", id);
-  
+  const result = await Bike.findById(id);  
   if(!result){
     throw new AppError(httpStatus.NOT_FOUND, 'Bike Not Found!');
   }
@@ -33,7 +32,7 @@ const updateBikeFromDB = async (id: string, payload: Partial<TBike>) => {
 const deleteBikeFromDB = async (id: string) => {
   const result = await Bike.findByIdAndUpdate(
     id,
-    { isAvailable: false },
+    { isDeleted: true },
     {
       new: true,
     },

@@ -5,6 +5,11 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { TUser } from "./user.interface";
 
+const getAllFromDB = async () => {
+  const user = await User.find();   
+  return user;
+};
+
 const getProfileFromDB = async (token: string) => {
   // checking if the given token is valid
   const decoded = jwt.verify(
@@ -49,7 +54,25 @@ const updateProfileIntoDB = async (token: string, payload: Partial<TUser>) => {
   return result;
 };
 
+const updateUserIntoDB = async (id: string, payload: Partial<TUser>) => {
+
+  // checking if the user is exist
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found !");
+  }
+  // const result = await User.findByIdAndUpdate(filter, payload, {
+  const result = await User.findByIdAndUpdate( id, payload, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
 export const UserServices = {
+  getAllFromDB,
   getProfileFromDB,
   updateProfileIntoDB,
+  updateUserIntoDB
 };

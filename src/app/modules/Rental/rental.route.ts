@@ -19,6 +19,13 @@ router.get(
   auth(USER_ROLE.admin, USER_ROLE.user),
   RentalControllers.getAllRentals,
 );
+
+router.get(
+  "/bikeIsAvailable/:id",
+  // auth(USER_ROLE.admin, USER_ROLE.user),
+  RentalControllers.bikeIsAvailable,
+);
+
 router.put("/:id", auth(USER_ROLE.admin, USER_ROLE.user), RentalControllers.updateRental);
 
 router.put("/:id/return", auth(USER_ROLE.admin), RentalControllers.returnBike);

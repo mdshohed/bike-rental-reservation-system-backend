@@ -20,7 +20,7 @@ const updateBikeValidationSchema = z.object({
     description: z.string().optional(),
     pricePerHour: z.number().optional(),
     isAvailable: z.boolean().optional(),
-    cc: z.boolean().optional(),
+    cc: z.number().optional(),
     year: z.number().optional(),
     model: z.string().optional(),
     brand: z.string().optional(),

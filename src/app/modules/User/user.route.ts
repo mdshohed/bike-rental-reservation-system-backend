@@ -8,6 +8,12 @@ import { USER_ROLE } from "./user.constant";
 const router = express.Router();
 
 router.get(
+  "/",
+  auth(USER_ROLE.admin),
+  UserControllers.getAll,
+);
+
+router.get(
   "/me",
   auth(USER_ROLE.admin, USER_ROLE.user),
   UserControllers.getProfile,
@@ -18,6 +24,13 @@ router.put(
   auth(USER_ROLE.admin, USER_ROLE.user),
   validateRequest(updateUserValidationSchema),
   UserControllers.updateProfile,
+);
+
+router.put(
+  "/:id",
+  auth(USER_ROLE.admin),
+  validateRequest(updateUserValidationSchema),
+  UserControllers.updateUser,
 );
 
 export const UserRoutes = router;

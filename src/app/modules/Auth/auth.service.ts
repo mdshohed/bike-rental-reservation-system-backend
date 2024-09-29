@@ -107,7 +107,6 @@ const changePassword = async (
 const refreshToken = async (token: string) => {
   // checking if the given token is valid
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
-  console.log("refresh", decoded);
   
   const { userEmail, iat} = decoded; 
   // checking if the user is exist
@@ -180,7 +179,6 @@ const forgetPassword = async (userEmail: string) =>{
   sendEmail( user.email, resetUILink); 
  
 
-  console.log(resetUILink);
 }
 
 

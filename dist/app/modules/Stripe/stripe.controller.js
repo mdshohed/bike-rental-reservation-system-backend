@@ -12,25 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = void 0;
-const nodemailer_1 = __importDefault(require("nodemailer"));
-const config_1 = __importDefault(require("../config"));
-const sendEmail = (to, html) => __awaiter(void 0, void 0, void 0, function* () {
-    const transporter = nodemailer_1.default.createTransport({
-        host: 'smtp.gmail.com.',
-        port: 587,
-        secure: config_1.default.node_env === 'production',
-        auth: {
-            user: 'mdshohed170@gmail.com',
-            pass: "ilmo kjeo qncq zhda",
-        },
+exports.StripeControllers = void 0;
+const config_1 = __importDefault(require("../../config"));
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+const stripe = require("stripe")(config_1.default.stripe_secret_kay);
+const createPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { price } = req.body;
+    const amount = (price);
+    const paymentIntent = yield stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: [
+            'card'
+        ],
     });
-    const ok = yield transporter.sendMail({
-        from: 'mdshohed170@gmail.com',
-        to,
-        subject: 'Reset your password within 10 mins!',
-        text: '',
-        html, // html body
+    res.send({
+        clientSecret: paymentIntent.client_secret,
     });
-});
-exports.sendEmail = sendEmail;
+}));
+exports.StripeControllers = {
+    createPayment
+};

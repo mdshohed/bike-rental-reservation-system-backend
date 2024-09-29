@@ -18,9 +18,13 @@ const user_model_1 = require("./user.model");
 const config_1 = __importDefault(require("../../config"));
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
+const getAllFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.find();
+    return user;
+});
 const getProfileFromDB = (token) => __awaiter(void 0, void 0, void 0, function* () {
     // checking if the given token is valid
-    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_refresh_secret);
+    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret);
     const { userEmail } = decoded;
     // checking if the user is exist
     const user = yield user_model_1.User.isUserExistsByCustomEmail(userEmail);
@@ -31,7 +35,7 @@ const getProfileFromDB = (token) => __awaiter(void 0, void 0, void 0, function* 
 });
 const updateProfileIntoDB = (token, payload) => __awaiter(void 0, void 0, void 0, function* () {
     // checking if the given token is valid
-    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_refresh_secret);
+    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret);
     const { userEmail } = decoded;
     // checking if the user is exist
     const user = yield user_model_1.User.isUserExistsByCustomEmail(userEmail);
@@ -46,7 +50,22 @@ const updateProfileIntoDB = (token, payload) => __awaiter(void 0, void 0, void 0
     });
     return result;
 });
+const updateUserIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // checking if the user is exist
+    const user = yield user_model_1.User.findById(id);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "This user is not found !");
+    }
+    // const result = await User.findByIdAndUpdate(filter, payload, {
+    const result = yield user_model_1.User.findByIdAndUpdate(id, payload, {
+        new: true,
+        runValidators: true,
+    });
+    return result;
+});
 exports.UserServices = {
+    getAllFromDB,
     getProfileFromDB,
     updateProfileIntoDB,
+    updateUserIntoDB
 };

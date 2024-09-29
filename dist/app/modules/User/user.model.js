@@ -46,8 +46,12 @@ const userSchema = new mongoose_1.Schema({
         enum: ["admin", "user"],
     },
     isDeleted: {
-        type: String,
-        require: true,
+        type: Boolean,
+        require: false,
+    },
+    isActive: {
+        type: Boolean,
+        require: false,
     },
 }, {
     timestamps: true,

@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose";
 import { TUser, UserModel } from "./user.interface";
 import bcrypt from "bcrypt";
 import config from "../../config";
+import { boolean } from "zod";
 
 const userSchema = new Schema<TUser>(
   {
@@ -34,8 +35,12 @@ const userSchema = new Schema<TUser>(
       enum: ["admin", "user"],
     },
     isDeleted: {
-      type: String,
-      require: true,
+      type: Boolean,
+      require: false,
+    },
+    isActive: {
+      type: Boolean,
+      require: false,
     },
   },
   {

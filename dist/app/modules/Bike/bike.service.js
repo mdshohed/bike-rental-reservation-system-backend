@@ -8,8 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BikeServices = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 const bike_model_1 = require("./bike.model");
 const createBikeIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield bike_model_1.Bike.create(payload);
@@ -19,6 +24,13 @@ const getAllBikesFromDB = (query) => __awaiter(void 0, void 0, void 0, function*
     const result = yield bike_model_1.Bike.find();
     return result;
 });
+const getSingleBikeFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield bike_model_1.Bike.findById(id);
+    if (!result) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Bike Not Found!');
+    }
+    return result;
+});
 const updateBikeFromDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield bike_model_1.Bike.findByIdAndUpdate(id, payload, {
         new: true,
@@ -26,7 +38,7 @@ const updateBikeFromDB = (id, payload) => __awaiter(void 0, void 0, void 0, func
     return result;
 });
 const deleteBikeFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield bike_model_1.Bike.findByIdAndUpdate(id, { isAvailable: false }, {
+    const result = yield bike_model_1.Bike.findByIdAndUpdate(id, { isDeleted: true }, {
         new: true,
     });
     return result;
@@ -34,6 +46,7 @@ const deleteBikeFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
 exports.BikeServices = {
     createBikeIntoDB,
     getAllBikesFromDB,
+    getSingleBikeFromDB,
     updateBikeFromDB,
     deleteBikeFromDB,
 };

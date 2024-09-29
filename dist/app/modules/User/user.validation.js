@@ -20,5 +20,6 @@ exports.updateUserValidationSchema = zod_1.z.object({
         phone: zod_1.z.string().optional(),
         address: zod_1.z.string().optional(),
         role: zod_1.z.enum(["admin", "user"]).optional(),
+        isActive: zod_1.z.boolean().optional(),
     }),
 });

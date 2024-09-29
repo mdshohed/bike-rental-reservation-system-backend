@@ -22,32 +22,39 @@ const auth = (...requiredRoles) => {
     return (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const authHeader = req.headers.authorization;
         // console.log(authHeader);
-        const token = authHeader === null || authHeader === void 0 ? void 0 : authHeader.split(' ')[1];
+        // const token = authHeader?.split(' ')[1];
+        // console.log({token});
+        const token = authHeader;
         // checking if the token is missing
         if (!token) {
-            throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You have no access to this route");
+            throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You have no access to this route1");
         }
-        const { refreshToken } = req.cookies;
-        if (!refreshToken) {
-            throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You have no access to this route");
-        }
+        // const { refreshToken } = req.cookies;
+        // if (!refreshToken) {
+        //   throw new AppError(
+        //     httpStatus.UNAUTHORIZED,
+        //     "You have no access to this route2",
+        //   );
+        // }
         // checking if the given token is valid
         const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret);
-        const decoded2 = jsonwebtoken_1.default.verify(refreshToken, config_1.default.jwt_refresh_secret);
+        // const decoded2 = jwt.verify(
+        //   refreshToken,
+        //   config.jwt_refresh_secret as string,
+        // ) as JwtPayload; 
         let { role, userEmail } = decoded;
-        let { role: role2, userEmail: userEmail2 } = decoded2;
-        console.log(role, userEmail, role2, userEmail2);
+        // let { role: role2, userEmail: userEmail2 } = decoded2;
         // checking if the user is exist
         const user = yield user_model_1.User.isUserExistsByCustomEmail(userEmail);
         if (!user) {
-            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You have no access to this route");
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You have no access to this route3");
         }
-        if ((!role.includes(role2)) || (!userEmail.includes(userEmail2))) {
-            console.log(role2, userEmail2);
-            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You have no access to this route");
-        }
+        // if ( (!role.includes(role2)) || ( !userEmail.includes(userEmail2)) ) {
+        //   console.log(role2, userEmail2);
+        //   throw new AppError(httpStatus.NOT_FOUND, "You have no access to this route4");
+        // }
         if (requiredRoles && !requiredRoles.includes(role)) {
-            throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You have no access to this route");
+            throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You have no access to this route5");
         }
         req.user = decoded;
         next();

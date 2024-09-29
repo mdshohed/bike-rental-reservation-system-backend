@@ -7,6 +7,7 @@ export interface TRental {
   returnTime: Date;
   totalCost: number;
   isReturned: boolean;
+  discount: number; 
   totalPaid: number, 
   isPaid: boolean, 
 }
@@ -16,4 +17,5 @@ export type TBooking = {
   startTime: Date;
   totalPaid: number, 
   isPaid: boolean, 
+  discount: number,
 };

@@ -18,18 +18,18 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const rental_service_1 = require("./rental.service");
 const createRental = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { refreshToken } = req.cookies;
-    const result = yield rental_service_1.RentalServices.createRentalIntoDB(refreshToken, req.body);
+    const token = req.headers.authorization || '';
+    const result = yield rental_service_1.RentalServices.createRentalIntoDB(token, req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Rental created successfully",
+        message: "Rental booked successfully",
         data: result,
     });
 }));
 const getAllRentals = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { refreshToken } = req.cookies;
-    const result = yield rental_service_1.RentalServices.getAllRentalsFromDB(refreshToken);
+    const token = req.headers.authorization || '';
+    const result = yield rental_service_1.RentalServices.getAllRentalsFromDB(token);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -37,10 +37,21 @@ const getAllRentals = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+const bikeIsAvailable = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.authorization || '';
+    const { bikeId } = req.body;
+    const result = yield rental_service_1.RentalServices.bikeIsAvailableInToDB(token, bikeId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Rentals Check successfully",
+        data: result,
+    });
+}));
 const returnBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { refreshToken } = req.cookies;
-    const result = yield rental_service_1.RentalServices.returnBikeInToDB(refreshToken, id);
+    const token = req.headers.authorization || '';
+    const result = yield rental_service_1.RentalServices.returnBikeInToDB(token, id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -48,8 +59,22 @@ const returnBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+const updateRental = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const token = req.headers.authorization || '';
+    const totalPaid = req.body;
+    const result = yield rental_service_1.RentalServices.updateRentalBikeInToDB(token, id, totalPaid.totalPaid);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Rental Payment Updated successfully!",
+        data: result,
+    });
+}));
 exports.RentalControllers = {
     createRental,
     getAllRentals,
+    bikeIsAvailable,
     returnBike,
+    updateRental,
 };

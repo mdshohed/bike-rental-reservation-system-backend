@@ -13,5 +13,9 @@ const user_constant_1 = require("../User/user.constant");
 const router = express_1.default.Router();
 router.post("/", (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.user), (0, validateRequest_1.default)(rental_validation_1.createRentalValidationSchema), rental_controller_1.RentalControllers.createRental);
 router.get("/", (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.user), rental_controller_1.RentalControllers.getAllRentals);
+router.get("/bikeIsAvailable/:id", 
+// auth(USER_ROLE.admin, USER_ROLE.user),
+rental_controller_1.RentalControllers.bikeIsAvailable);
+router.put("/:id", (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.user), rental_controller_1.RentalControllers.updateRental);
 router.put("/:id/return", (0, auth_1.default)(user_constant_1.USER_ROLE.admin), rental_controller_1.RentalControllers.returnBike);
 exports.RentalRoutes = router;

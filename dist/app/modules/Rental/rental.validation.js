@@ -15,5 +15,7 @@ exports.createRentalValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
         bikeId: zod_1.z.string(),
         startTime: zod_1.z.string(),
+        totalPaid: zod_1.z.number(),
+        discount: zod_1.z.number().optional()
     }),
 });

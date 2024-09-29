@@ -25,6 +25,10 @@ const RentalSchema = new Schema<TRental>(
       type: Number,
       required: true,
     },
+    discount: {
+      type: Number, 
+      default: 0, 
+    },
     isReturned: {
       type: Boolean,
       required: true,

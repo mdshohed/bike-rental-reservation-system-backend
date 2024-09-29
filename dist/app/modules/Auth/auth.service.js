@@ -122,7 +122,6 @@ const forgetPassword = (userEmail) => __awaiter(void 0, void 0, void 0, function
     const accessToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.reset_password_ui_link);
     const resetUILink = `http://localhost:3000?id=${user.email}&token=${accessToken}`;
     (0, sendEmail_1.sendEmail)(user.email, resetUILink);
-    console.log(resetUILink);
 });
 const resetPassword = (payload, token) => __awaiter(void 0, void 0, void 0, function* () {
     // checking if the user is exist

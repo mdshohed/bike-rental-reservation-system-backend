@@ -9,6 +9,7 @@ export interface TUser {
   address: string;
   role: "admin" | "user";
   isDeleted?: boolean;
+  isActive?: boolean;
 }
 
 export interface UserModel extends Model<TUser> {

@@ -39,6 +39,9 @@ const bikeSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    image: {
+        type: String
+    }
 });
 // filter out deleted documents
 bikeSchema.pre("find", function (next) {

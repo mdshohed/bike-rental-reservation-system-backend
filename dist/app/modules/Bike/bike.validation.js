@@ -12,6 +12,7 @@ const createBikeValidationSchema = zod_1.z.object({
         year: zod_1.z.number(),
         model: zod_1.z.string(),
         brand: zod_1.z.string(),
+        image: zod_1.z.string().optional()
         // isDeleted: z.boolean().optional(),
     }),
 });
@@ -26,6 +27,7 @@ const updateBikeValidationSchema = zod_1.z.object({
         model: zod_1.z.string().optional(),
         brand: zod_1.z.string().optional(),
         isDeleted: zod_1.z.boolean().optional(),
+        image: zod_1.z.string().optional()
     }),
 });
 exports.BikeValidations = {

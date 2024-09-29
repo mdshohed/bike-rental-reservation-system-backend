@@ -10,6 +10,7 @@ const createBikeValidationSchema = z.object({
     year: z.number(),
     model: z.string(),
     brand: z.string(),
+    image: z.string().optional()
     // isDeleted: z.boolean().optional(),
   }),
 });
@@ -25,6 +26,7 @@ const updateBikeValidationSchema = z.object({
     model: z.string().optional(),
     brand: z.string().optional(),
     isDeleted: z.boolean().optional(),
+    image: z.string().optional()
   }),
 });
 

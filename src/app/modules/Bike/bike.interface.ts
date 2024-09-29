@@ -8,4 +8,5 @@ export interface TBike {
   model: string;
   brand: string;
   isDeleted?: boolean;
+  image?: string,
 }
